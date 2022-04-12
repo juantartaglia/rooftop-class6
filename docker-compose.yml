@@ -1,0 +1,30 @@
+version: '3.8'
+
+networks:
+  class6-network:
+    driver: bridge
+
+services:
+  class6-app:
+    container_name: class6-app
+    image: juantartaglia/rooftop_academy_class6
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - class6-network
+  postgres:
+    container_name: postgres
+    image: postgres:14.2-alpine
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=mypassword
+      - PGDATA=/var/lib/postgresql/data
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    networks:
+      - class6-network
